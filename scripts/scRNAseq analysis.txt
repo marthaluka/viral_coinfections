@@ -1,0 +1,48 @@
+13:01:07 From Srikeerthana Kuchi to Everyone:
+	https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/advanced/references
+13:02:15 From Srikeerthana Kuchi to Everyone:
+	GTF files downloaded from sites like ENSEMBL and UCSC often contain transcripts and genes which need to be filtered from your final annotation
+13:08:15 From Srikeerthana Kuchi to Everyone:
+	https://www.ncbi.nlm.nih.gov/data-hub/genome/GCF_000865725.1/
+13:12:07 From Srikeerthana Kuchi to Everyone:
+	https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/mkfastq
+13:13:42 From Srikeerthana Kuchi to Everyone:
+	https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/using/count
+13:17:39 From Srikeerthana Kuchi to Everyone:
+	Human, RSV and Flu
+13:17:49 From Srikeerthana Kuchi to Everyone:
+	Human_RSV_Flu
+13:18:41 From Srikeerthana Kuchi to Everyone:
+	Sample,Index,Condition
+	Smpl-1,SI-GA-A1,P1_mock
+	Smpl-2,SI-GA-B1,P2_mock
+	Smpl-3,SI-GA-C1,P1_Flu
+	Smpl-4,SI-GA-D1,P2_Flu
+	Smpl-5,SI-GA-E1,P1_RSV
+	Smpl-6,SI-GA-F1,P2_RSV
+	Smpl-7,SI-GA-G1,P1_Flu-RSV
+	Smpl-8,SI-GA-H1,P2_Flu-RSV
+13:19:08 From Srikeerthana Kuchi to Everyone:
+	id=P1_mock
+13:19:38 From Srikeerthana Kuchi to Everyone:
+	sample=Smpl-1
+13:22:26 From Srikeerthana Kuchi to Everyone:
+	cellranger count  --id=P1_mock --transcriptome=/Users/skk7t/human_Flu_RSV —fasts=/pathtofastq  --sample=Smpl-1 --expect-cells=1500 --localmem=64
+13:23:10 From Srikeerthana Kuchi to Everyone:
+	/home3/skk7t/KEERTHANA/SC_DATA/DATA/HG5KGBGXJ
+13:24:13 From Srikeerthana Kuchi to Everyone:
+	/home3/skk7t/KEERTHANA/COINFECTION/SC_DATA/DATA/HG5KGBGXJ
+13:24:35 From Srikeerthana Kuchi to Everyone:
+	Smpl-1
+13:24:50 From Srikeerthana Kuchi to Everyone:
+	/home3/skk7t/KEERTHANA/COINFECTION/SC_DATA/DATA/HG5KGBGXJ/Smpl-1
+13:26:14 From Srikeerthana Kuchi to Everyone:
+	&
+13:28:04 From Srikeerthana Kuchi to Everyone:
+	https://satijalab.org/seurat/reference/read10x
+13:29:13 From Srikeerthana Kuchi to Everyone:
+	https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/output/overview
+13:31:27 From Srikeerthana Kuchi to Everyone:
+	Loupe Browser
+13:33:56 From Srikeerthana Kuchi to Everyone:
+	https://satijalab.org/seurat/articles/sctransform_v2_vignette.html

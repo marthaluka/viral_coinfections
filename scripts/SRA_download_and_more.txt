@@ -1,0 +1,222 @@
+
+
+# install SRA toolkit https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit
+# proceed to quick configuration
+# https://github.com/ncbi/sra-tools/wiki/03.-Quick-Toolkit-Configuration
+
+
+# download accession list
+# search in NCBI, SRA database, using the bioproject number (PRJEB29313)
+# send to file the Accession list
+
+prefetch --option-file SraAccList.csv
+prefetch ERR2854652 # one sample
+
+#SRAlite to fastq
+
+fasterq-dump --split-files ./*/*.sra
+fasterq-dump --split-files ERR2854652.sra # one sample
+
+
+# concatenate samples per conditions
+
+ SRR11517827_trimmed.fq SRR11517828_trimmed.fq SRR11517829_trimmed.fq SRR11517830_trimmed.fq > ../concat/Series9_NHBE_IFNB_12h_2.fastq 
+ SRR11517823_trimmed.fq SRR11517824_trimmed.fq SRR11517825_trimmed.fq SRR11517826_trimmed.fq > ../concat/Series9_NHBE_IFNB_12h_1.fastq 
+ SRR11517819_trimmed.fq SRR11517820_trimmed.fq SRR11517821_trimmed.fq SRR11517822_trimmed.fq > ../concat/Series9_NHBE_IFNB_6h_2.fastq 
+ SRR11517815_trimmed.fq SRR11517816_trimmed.fq SRR11517817_trimmed.fq SRR11517818_trimmed.fq > ../concat/Series9_NHBE_IFNB_6h_1.fastq 
+ SRR11517811_trimmed.fq SRR11517812_trimmed.fq SRR11517813_trimmed.fq SRR11517814_trimmed.fq > ../concat/Series9_NHBE_IFNB_4h_2.fastq 
+ SRR11517807_trimmed.fq SRR11517808_trimmed.fq SRR11517809_trimmed.fq SRR11517810_trimmed.fq > ../concat/Series9_NHBE_IFNB_4h_1.fastq 
+ SRR11517787_trimmed.fq SRR11517788_trimmed.fq SRR11517789_trimmed.fq SRR11517790_trimmed.fq > ../concat/Series9_NHBE_IAV_4.fastq 
+ SRR11517783_trimmed.fq SRR11517784_trimmed.fq SRR11517785_trimmed.fq SRR11517786_trimmed.fq > ../concat/Series9_NHBE_IAV_3.fastq 
+ SRR11517779_trimmed.fq SRR11517780_trimmed.fq SRR11517781_trimmed.fq SRR11517782_trimmed.fq > ../concat/Series9_NHBE_IAV_2.fastq 
+ SRR11517775_trimmed.fq SRR11517776_trimmed.fq SRR11517777_trimmed.fq SRR11517778_trimmed.fq > ../concat/Series9_NHBE_IAV_1.fastq 
+ SRR11517771_trimmed.fq SRR11517772_trimmed.fq SRR11517773_trimmed.fq SRR11517774_trimmed.fq > ../concat/Series9_NHBE_Mock_4.fastq 
+ SRR11517767_trimmed.fq SRR11517768_trimmed.fq SRR11517769_trimmed.fq SRR11517770_trimmed.fq > ../concat/Series9_NHBE_Mock_3.fastq 
+ SRR11517763_trimmed.fq SRR11517764_trimmed.fq SRR11517765_trimmed.fq SRR11517766_trimmed.fq > ../concat/Series9_NHBE_Mock_2.fastq 
+ SRR11517759_trimmed.fq SRR11517760_trimmed.fq SRR11517761_trimmed.fq SRR11517762_trimmed.fq > ../concat/Series9_NHBE_Mock_1.fastq 
+ SRR11412235_trimmed.fq SRR11412236_trimmed.fq SRR11412237_trimmed.fq SRR11412238_trimmed.fq > ../concat/Series1_NHBE_SARS-CoV-2_3.fastq 
+ SRR11412231_trimmed.fq SRR11412232_trimmed.fq SRR11412233_trimmed.fq SRR11412234_trimmed.fq > ../concat/Series1_NHBE_SARS-CoV-2_2.fastq 
+ SRR11412227_trimmed.fq SRR11412228_trimmed.fq SRR11412229_trimmed.fq SRR11412230_trimmed.fq > ../concat/Series1_NHBE_SARS-CoV-2_1.fastq 
+ SRR11412223_trimmed.fq SRR11412224_trimmed.fq SRR11412225_trimmed.fq SRR11412226_trimmed.fq > ../concat/Series1_NHBE_Mock_3.fastq
+ SRR11412219_trimmed.fq SRR11412220_trimmed.fq SRR11412221_trimmed.fq SRR11412222_trimmed.fq > ../concat/Series1_NHBE_Mock_2.fastq 
+ SRR11412215_trimmed.fq SRR11412216_trimmed.fq SRR11412217_trimmed.fq SRR11412218_trimmed.fq > ../concat/Series1_NHBE_Mock_1.fastq
+
+
+# fastqc and multiqc
+
+#usage
+#fastqc seqfile1 seqfile2 .. seqfileN
+fastqc *
+
+#!/bin/bash
+
+# running from data directory
+# specify the folder containing the fastq files
+folder="./"
+output_folder="./fastqc/"
+
+# create directory if doesnt exist
+mkdir -p ${output_folder}
+
+# loop through all fastq files in the folder
+for file in $folder/*.fastq
+do
+  # run FastQC on the file
+  fastqc $file -o $output_folder
+done
+
+multiqc .
+
+
+#Trimming : Trim_galore
+
+#!/bin/bash
+
+# run from raw_reads directory
+# Specify the directory containing the fastq files
+dir="."
+out_dir="../trimmed/"
+
+# Loop through all fastq files in the directory
+for file in $dir/*.fastq
+do
+  # Run TrimGalore on the file
+  trim_galore --length 40 --clip_R1 6 --three_prime_clip_R1 3 --output_dir $out_dir --quality 30 --illumina $file 
+done
+
+
+# FASTQC AGAIN
+
+
+# Download the reference Genome from https://hgdownload.soe.ucsc.edu/downloads.html
+# Read the readme file to understand the files and find the right subfolders
+
+# Use wget to download the gtf file #https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/genes/
+#the fasta files (and the genome already indexed if you want) #http://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/analysisSet/
+
+$ wget --timestamping 'ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/analysisSet/hg19.p13.plusMT.no_alt_analysis_set.fa.gz' -O hg19.p13.plusMT.no_alt_analysis_set.fa.gz 
+
+$ wget --timestamping 'ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/genes/hg19.refGene.gtf.gz' -O hg19.refGene.gtf.gz
+
+
+# Download the hg38 reference genome
+wget http://ftp.ensembl.org/pub/release-109/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+
+# Uncompress the reference genome
+gunzip 
+
+#gtf
+wget --timestamping http://ftp.ensembl.org/pub/release-109/gtf/homo_sapiens/Homo_sapiens.GRCh38.109.gtf.gz -O hg38.refGene.gtf.gz
+
+# Build the reference genome index
+hisat2-build Homo_sapiens.GRCh38.dna.primary_assembly.fa hg38_index
+
+
+
+
+# alternatively, you can create an index from the genome sequece in fasta format, using bowtie2, hithator, others
+$ bowtie2-build <Ref_genome.fasta> <Ref_genome>
+bowtie2-build hg19.p13.plusMT.no_alt_analysis_set.fa hg19
+
+
+#Mapping reads against reference usig tophat2
+(check this tutorial https://angus.readthedocs.io/en/2013/rnaseq_tophat.html)
+
+/software/tophat-v2.1.1/tophat2  -p 8 -o <Outputdir> --library-type fr-firststrand --GTF <Ref_genome.gtf> <Ref_genome> <trimmed_reads.fastq>
+
+/software/tophat-v2.1.1/tophat2 -p 8 -o ../mapped --library-type fr-firststrand --GTF ../ref_seq/hg19.refGene.gtf ../ref_seq/hg19 Series1_NHBE_Mock_1.fastq
+
+# SAM to BAM, sort the bam file and visualize with Tablet
+
+$ samtools sort -n C1_R1_trimmed_aligned.bam -o C1_R1_sn
+
+
+# Check alignment
+# Then load SAM file and reference genome sequence FASTA file in Tablet
+# # generation of count table with featureCount:
+
+featureCounts -O -T <#threads> -a example_genome_annotation.gtf -o output_count_table.txt sorted_alignment.bam 
+
+# script
+#!/bin/bash
+
+# create a directory one level above current directory (sorted.bam location) for output
+mkdir ../featureCounts_output
+
+# loop through directories within the current directory
+for dir in */; do
+  cd $dir
+   
+   # sort bam files first
+    samtools sort accepted_hits.bam -o ${dir%/}_sorted.bam
+  
+  # loop through files in the current directory
+  for file in *_sorted.bam; do
+    # get the prefix of the input file
+    prefix=${file%_sorted.bam}
+    # run featureCounts on the input file
+    featureCounts -O -t CDS -a ../../ref_seq/hg19.refGene.gtf -o ../../featureCounts_output/${prefix}_count_table.txt
+  done
+  
+  # go back to the parent directory
+  cd ..
+done
+
+
+
+
+* gives both a summary table and count table
+* () Create count matrix: The counts files are currently in the format of one file per sample. Join the datasets to create a single count matrix
+
+# differential expresion analysis with DeSeq2/Cuffdiff2
+* DeSeq2 tutorial https://genviz.org/module-04-expression/0004/02/01/DifferentialExpression/
+* be carefull to select the correct function according to the imput matrix (counts obtained with featureCounts) since it changes according to the software (output format) used in the previous step.
+
+# Visualizations
+
+## End
+
+
+
+
+
+
+
+An alternative to featureCounts
+*Cutdiff: check https://angus.readthedocs.io/en/2013/DGE_analysis_with_MISO_cuffdiff.html
+
+cuffdiff -o DEout --library-type fr-firststrand -b ./EquCab2/Horse.fa -m 76 -L C1,C2 -u ./EquCab2/genes.gtf C1_R1_trimmed_aligned.bam,C1_R2_trimmed_aligned.bam,C1_R3_trimmed_aligned.bam C2_R1_trimmed_aligned.bam, C2_R2_trimmed_aligned.bam, C2_R3_trimmed_aligned.bam
+
+
+# Visualization (alternative to ggplot2)
+https://github.com/Searchlight2/Searchlight2
+
+
+
+
+# Single cell (scRNAseq analysis)
+
+Get refs (both gif and fasta files for human, flu and rsv)
+
+
+# filter genes to include CDS and antisense
+cellranger mkgtf hg38.refGene.gtf h38_filtered.gtf --attribute=gene_biotype:protein_coding --attribute=gene_biotype:antisense 
+cellranger mkgtf flu.gtf flu_filtered.gtf --attribute=gene_biotype:protein_coding --attribute=gene_biotype:antisense
+cellranger mkgtf flu.gtf flu_filtered.gtf --attribute=gene_biotype:protein_coding --attribute=gene_biotype:antisense
+
+
+#mkref
+nohup cellranger mkref --nthreads=6 --genome=human --fasta=GRCh38.dna.primary_assembly.fa --genes=h38_filtered.gtf  --genome=Flu --fasta=flu.fna --genes=flu_genes.gtf --genome=RSV --fasta=rsv.fna --genes=rsv.gtf --memgb=400 &
+
+
+#count
+
+cellranger count --id=sample345 \
+                   --transcriptome=/opt/refdata-gex-GRCh38-2020-A \
+                   --fastqs=/home/jdoe/runs/HAWT7ADXX/outs/fastq_path \
+                   --sample=mysample \
+                   --localcores=8 \
+                   --localmem=64
+
+
+
