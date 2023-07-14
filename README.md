@@ -1,4 +1,4 @@
-# virus_coinfections
+# viral_coinfections
 
 The human respiratory tract hosts a community of viruses that cause epidemics and pandemics. Respiratory Syncytial Virus (RSV) and Influenza are two significant contributors to respiratory infections. We sought to characterize the mechanism of RSV-IAV interactions by analyzing bulk transcriptomics data from experimental conditions of air-liquid interface cell cultures representing the human respiratory tract. 
 
